@@ -1,6 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const context = require('@actions/github').context;
+const { Octokit } = require("@octokit/rest");
 
 async function run() {
   try {
@@ -10,7 +11,7 @@ async function run() {
       throw new Error('No token');
     }
 
-    const octokit = new github.GitHub(token);
+    const octokit = new Octokit(token);
 
     const { data: pulls } = await octokit.pulls.list({
       ...context.repo,
