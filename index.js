@@ -1,7 +1,6 @@
-import {context} from "@actions/github";
-
 const core = require('@actions/core');
 const github = require('@actions/github');
+const context = require('@actions/github').context;
 
 async function run() {
   try {
