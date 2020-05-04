@@ -1,5 +1,5 @@
 const core = require('@actions/core');
-const github = require('@actions/github');
+// const github = require('@actions/github');
 const context = require('@actions/github').context;
 const { Octokit } = require("@octokit/rest");
 
