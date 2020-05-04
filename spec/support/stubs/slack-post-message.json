@@ -1,0 +1,41 @@
+{
+  "ok": true,
+  "channel": "D013WYMJ3AJ",
+  "ts": "1588970989.002200",
+  "message": {
+    "bot_id": "CVL36K29K",
+    "type": "message",
+    "text": "This content can't be displayed.",
+    "user": "UP8RC5QWD",
+    "ts": "1588970989.002200",
+    "team": "T02FM8BF5",
+    "bot_profile": {
+      "id": "CVL36K29K",
+      "deleted": false,
+      "name": "GitHub Actions App",
+      "updated": 1582844416,
+      "app_id": "A18V4DCC5",
+      "icons": {
+        "image_36": "https://avatars.slack-edge.com/2020-02-27/961625594083_15f661d07d0273844884_36.jpg",
+        "image_48": "https://avatars.slack-edge.com/2020-02-27/961625594083_15f661d07d0273844884_48.jpg",
+        "image_72": "https://avatars.slack-edge.com/2020-02-27/961625594083_15f661d07d0273844884_72.jpg"
+      },
+      "team_id": "T02FM8BF5"
+    },
+    "blocks": [
+      {
+        "type": "section",
+        "block_id": "X5cKb",
+        "text": {
+          "type": "mrkdwn",
+          "text": "*<https://github.com/login/repo-name|login/repo-name>* has no open pull requests right now",
+          "verbatim": false
+        }
+      },
+      {
+        "type": "divider",
+        "block_id": "6TjCU"
+      }
+    ]
+  }
+}

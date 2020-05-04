@@ -1,0 +1,38 @@
+{
+  "name": "gh-action-open-pr-notifier",
+  "version": "1.0.0",
+  "description": "Posts a list of all open pull requests in Slack",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint index.js src/* spec/*",
+    "test-dev": "nodemon --exec jasmine",
+    "test": "jasmine"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leopic/gh-action-open-pr-notifier.git"
+  },
+  "keywords": [
+    "GitHub",
+    "Actions",
+    "JavaScript",
+    "Slack"
+  ],
+  "bugs": {
+    "url": "https://github.com/leopic/gh-action-open-pr-notifier/issues"
+  },
+  "homepage": "https://github.com/leopic/gh-action-open-pr-notifier#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.4",
+    "@actions/github": "^2.1.1",
+    "@slack/web-api": "^5.8.1"
+  },
+  "devDependencies": {
+    "eslint": "^6.3.0",
+    "jasmine": "^3.5.0",
+    "jasmine-core": "^3.5.0",
+    "nock": "^12.0.3",
+    "nodemon": "^2.0.3"
+  }
+}

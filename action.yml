@@ -1,0 +1,18 @@
+name: 'Open Pull Requests Notifier'
+description: 'Posts a message on slack with the list of open pull requests'
+inputs:
+  github-token:
+    required: true
+    description: 'Needed to query pull requests'
+  slackbot-token:
+    required: true
+    description: 'Needed to authenticate to Slacks API'
+  slack-conversation-id:
+    required: true
+    description: 'Channel or group that the message will be delivered to'
+runs:
+  using: 'node12'
+  main: 'index.js'
+branding:
+  icon: 'calendar'
+  color: 'red'
