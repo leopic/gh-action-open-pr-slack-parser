@@ -1,28 +1,20 @@
 const core = require('@actions/core');
-// const github = require('@actions/github');
 const context = require('@actions/github').context;
-const { Octokit } = require("@octokit/rest");
 
-async function run() {
+const lib = require('./src/lib');
+
+const run = async () => {
   try {
     const token = process.env['GITHUB_TOKEN'] || '';
+    const {owner, repo} = context.repo;
 
-    if (token === '') {
-      throw new Error('No token');
-    }
+    const prs = await lib({token, owner, repo});
 
-    const octokit = new Octokit(token);
-
-    const { data: pulls } = await octokit.pulls.list({
-      ...context.repo,
-      state: 'open'
-    });
-
-    console.log(pulls);
-    console.log('Open PRs:', pulls.map(pr => `- ${pr.title} by ${pr.user.login} - ${pr.html_url} \n`));
+    core.info(prs);
+    core.setOutput('message', prs);
   } catch (error) {
     core.setFailed(error.message)
   }
-}
+};
 
 run();

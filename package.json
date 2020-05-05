@@ -1,12 +1,12 @@
 {
-  "name": "GitHub Open Pull Requests Notifier",
+  "name": "github-open-pull-requests-notifier",
   "version": "1.0.0",
   "description": "JavaScript Action Template",
   "main": "index.js",
   "scripts": {
     "lint": "eslint index.js",
     "package": "ncc build index.js -o dist",
-    "test": "eslint index.js && jest"
+    "test": "eslint index.js && jasmine"
   },
   "repository": {
     "type": "git",
@@ -15,21 +15,25 @@
   "keywords": [
     "GitHub",
     "Actions",
-    "JavaScript"
+    "JavaScript",
+    "Slack"
   ],
-  "author": "GitHub",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/actions/javascript-action/issues"
   },
   "homepage": "https://github.com/actions/javascript-action#readme",
   "dependencies": {
+    "@octokit/rest": "^17.6.0",
     "@actions/core": "^1.1.1",
     "@actions/github": "^1.1.0"
   },
   "devDependencies": {
     "@zeit/ncc": "^0.20.5",
     "eslint": "^6.3.0",
-    "jest": "^24.9.0"
+    "jasmine": "^3.5.0",
+    "jasmine-core": "^3.5.0",
+    "karma": "^4.4.1",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-jasmine": "^3.1.1"
   }
 }

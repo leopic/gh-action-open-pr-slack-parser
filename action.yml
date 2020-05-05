@@ -1,13 +1,8 @@
-name: 'Wait'
-description: 'Wait a designated number of milliseconds'
-inputs:
-  milliseconds:  # id of input
-    description: 'number of milliseconds to wait'
-    required: true
-    default: '1000'
+name: 'Open Pull Requests Notifier'
+description: 'Returns a list of the open PRs'
 outputs:
-  time: # output will be available to future steps
-    description: 'The message to output'
+  message: # output will be available to future steps
+    description: 'Slack friendly message listing the open Pull Requests'
 runs:
   using: 'node12'
   main: 'index.js'
