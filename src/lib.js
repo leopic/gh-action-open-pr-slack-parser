@@ -1,5 +1,9 @@
 const { Octokit } = require('@octokit/rest');
 
+const parsePR = pr => {
+  return `- [${pr.title}](${pr.html_url}) by ${pr.user.login}\n`;
+};
+
 module.exports.work = async ({token, owner, repo}) => {
     if (!token) {
       throw new Error('No token');
@@ -20,9 +24,9 @@ module.exports.work = async ({token, owner, repo}) => {
       return 'No open pull requests right now.';
     }
 
-    let output = 'These are the open pull requests right now:\n';
-    const parsedPullRequests = pullRequests.map(pr => `- [${pr.title}](${pr.html_url}) by ${pr.user.login} \n`);
-    output += parsedPullRequests;
+    const header = 'These are the open pull requests right now:\n';
+    const parsedPullRequests = pullRequests.map(parsePR).join('');
+    const output = `${header}${parsedPullRequests}`.trim();
 
-    return output.trim();
+    return output;
 };

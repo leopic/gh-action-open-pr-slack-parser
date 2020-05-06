@@ -1,58 +1,75 @@
-// 'use strict';
-//
-// const process = require('process');
-// const cp = require('child_process');
-// const path = require('path');
-//
-// // const action = require('./index');
-// const lib = require('./../../src/lib');
-//
-// const context = require('@actions/github').context;
-// const Octokit = require('@octokit/rest');
-//
-// describe('anus start', () => {
-//   it('should just work', () => {
-//     expect(true).toBeTrue();
-//   });
-// });
-//
-// // beforeEach(() => {
-// //   // context.mockClear();
-// // });
-// //
-// // it('ing mocks', () => {
-// //   console.log(context);
-// //   console.log(Octokit);
-// // });
-//
-// // test('fails when incomplete params are given', async () => {
-// //   await expect(lib({})).rejects.toThrow('No token');
-// //   await expect(lib({token: '123'})).rejects.toThrow('No repo');
-// //   await expect(lib({token: '123', repo: 'leopic/gh-action-pr-notifier'})).rejects.toThrow('No owner');
-// //   await expect(lib({token: '123', owner: 'leopic'})).rejects.toThrow('No repo');
-// // });
-//
-// // test('avoid calling github', async () => {
-// //     const credentials = {token: '123', owner: 'leopic', repo: 'gh-action-open-pr-notifier'};
-// //
-// //     await lib(credentials).then(result => {
-// //       console.log('___ result', result);
-// //     }, error => {
-// //       console.error('___ error', error);
-// //     });
-// // });
-//
-// // shows how the runner will run a javascript action with env / stdout protocol
-// // test('test runs', () => {
-// //   // process.env['GITHUB_TOKEN'] = 'MY TOKEN';
-// //   process.env['GITHUB_REPOSITORY'] = 'leopic/gh-action-open-pr-notifier';
-// //
-// //   const ip = path.join(__dirname, 'index.js');
-// //   const exec = cp.execSync(`node ${ip}`).toString();
-// //   console.log(exec);
-// //
-// //   // delete process.env['GITHUB_TOKEN'];
-// //   delete process.env['GITHUB_REPOSITORY'];
-// //
-// //   expect(true).toBe(true);
-// // });
+'use strict';
+
+const nock = require('nock');
+
+const lib = require('../../src/lib');
+
+const fixtures = require('../support/fixtures');
+
+describe('lib', () => {
+  const token = 'valid token';
+  const repo = 'repo-name';
+  const owner = 'login';
+  const cannedResponses = fixtures.pullRequestData.responses;
+  const cannedHeaders = fixtures.pullRequestData.headers;
+
+  let networkStubBase = nock('https://api.github.com', {"encodedQueryParams": true})
+    .get('/repos/login/repo-name/pulls')
+    .query({"state": "open"});
+
+  const handlers = {
+    error: () => {},
+    success: () => {}
+  };
+
+  let errorSpy;
+  let successSpy;
+
+  beforeEach(() => {
+    errorSpy = spyOn(handlers, 'error');
+    successSpy = spyOn(handlers, 'success');
+  });
+
+  it('should reject incomplete invocations', async () => {
+    await lib.work({}).then(handlers.success, handlers.error);
+    await lib.work({token}).then(handlers.success, handlers.error);
+    await lib.work({token, repo}).then(handlers.success, handlers.error);
+    await lib.work({token, owner}).then(handlers.success, handlers.error);
+
+    expect(errorSpy).toHaveBeenCalledTimes(4);
+    expect(successSpy).not.toHaveBeenCalled();
+  });
+
+  it('should handle empty lists', async () => {
+    const scope = networkStubBase.reply(200, cannedResponses.empty, cannedHeaders);
+
+    await lib.work({token, owner, repo}).then(handlers.success, handlers.error);
+
+    scope.done();
+
+    expect(errorSpy).not.toHaveBeenCalled();
+    expect(successSpy).toHaveBeenCalledTimes(1);
+
+    const [result] = Array.from(successSpy.calls.mostRecent().args);
+    const expectation = 'No open pull requests right now.';
+    expect(result).toBe(expectation);
+  });
+
+  it('should handle full lists', async () => {
+    const scope = networkStubBase.reply(200, cannedResponses.full, cannedHeaders);
+
+    await lib.work({token, owner, repo}).then(handlers.success, handlers.error);
+
+    scope.done();
+
+    expect(errorSpy).not.toHaveBeenCalled();
+    expect(successSpy).toHaveBeenCalledTimes(1);
+
+    const [result] = Array.from(successSpy.calls.mostRecent().args);
+    const lineOne = 'These are the open pull requests right now:';
+    const lineTwo = '- [Trying to trigger a PR](https://github.com/leopic/gh-action-open-pr-notifier/pull/2) by leopic';
+    const lineThree = '- [Trying to trigger yet another PR](https://github.com/leopic/gh-action-open-pr-notifier/pull/3) by leopic';
+    const expectation = [lineOne, lineTwo, lineThree].join(`\n`);
+    expect(result).toBe(expectation);
+  });
+});
