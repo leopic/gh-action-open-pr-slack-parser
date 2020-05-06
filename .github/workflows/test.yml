@@ -16,7 +16,7 @@ jobs:
       - run: npm test
 
   # test action works running from the graph
-  run-on-hello-world:
+  run:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     runs-on: ubuntu-latest
