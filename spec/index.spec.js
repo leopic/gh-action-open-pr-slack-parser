@@ -5,25 +5,46 @@ const cp = require('child_process');
 const path = require('path');
 
 // const action = require('./index');
-const lib = require('./../src/lib');
+let lib = require('./../src/lib');
 
-const context = require('@actions/github').context;
-const Octokit = require('@octokit/rest');
+const fixtures = require('./support/fixtures');
+const helpers = require('./support/helpers');
+const pullResponse = require('./support/pulls.json');
+const nock = require('nock');
 
-describe('anus start', () => {
-  it('should just work', () => {
-    expect(true).toBeTrue();
+
+describe('index', () => {
+  it('should work when run from the command line', async () => {
+    // process.env['GITHUB_TOKEN'] = 'valid token';
+    // process.env['GITHUB_REPOSITORY'] = 'login/repo-name';
+
+    const scope = nock('https://api.github.com:443', {"encodedQueryParams": true})
+      .get('/repos/leopic/gh-action-open-pr-notifier/pulls')
+      .query({"state": "open"})
+      .reply(200,
+        helpers.encode(pullResponse),
+        fixtures.headers);
+
+    const creds = {token: 'INVALID', owner: 'leopic', repo: 'gh-action-open-pr-notifier'};
+    await lib.work(creds);
+
+    scope.done();
+
+    expect(true).toBe(true);
+
+    return;
+    // const ip = path.join(__dirname, './../', 'index.js');
+    //
+    // const exec = cp.execSync(`node ${ip}`).toString();
+    //
+    // console.log(exec);
+
+    // delete process.env['GITHUB_TOKEN'];
+    // delete process.env['GITHUB_REPOSITORY'];
+
+    // expect(true).toBe(true);
   });
 });
-
-// beforeEach(() => {
-//   // context.mockClear();
-// });
-//
-// it('ing mocks', () => {
-//   console.log(context);
-//   console.log(Octokit);
-// });
 
 // test('fails when incomplete params are given', async () => {
 //   await expect(lib({})).rejects.toThrow('No token');
