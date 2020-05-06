@@ -1,7 +1,7 @@
 {
   "name": "github-open-pull-requests-notifier",
   "version": "1.0.0",
-  "description": "JavaScript Action Template",
+  "description": "GitHub Action Open Pull Request Body Parser",
   "main": "index.js",
   "scripts": {
     "lint": "eslint index.js src/* spec/*",
