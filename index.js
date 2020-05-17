@@ -16,7 +16,6 @@ module.exports.run = async () => {
     const Octokit = new GitHubClient(gitHubToken);
     const {owner, repo} = GitHubContext.repo;
     message = await getMessage({Octokit, owner, repo});
-
     GitHubCore.info('Message built');
   } catch (error) {
     GitHubCore.setFailed(prefixError(error, 'GitHub'));
